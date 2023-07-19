@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'themes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,10 +14,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TODO List',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         useMaterial3: true,
+        colorScheme: lightColorScheme,
+        textTheme: textTheme,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        textTheme: textTheme,
+      ),
+      themeMode: ThemeMode.system,
+      debugShowCheckedModeBanner: false,
+      themeAnimationDuration: const Duration(milliseconds: 500),
+      home: const MyHomePage(title: 'TODO App'),
     );
   }
 }
