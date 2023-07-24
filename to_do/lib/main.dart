@@ -26,51 +26,96 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       themeAnimationDuration: const Duration(milliseconds: 500),
-      home: const MyHomePage(title: 'TODO App'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key, this.responsiveWidth = 600});
+
+  final num responsiveWidth;
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  int navigationIndex = 0;
+
+  final List<Widget> _screens = const [
+    // ToDo list
+    Center(
+      child: Text('ToDo List'),
+    ),
+    // Completed tasks
+    Center(
+      child: Text('Completed Tasks'),
+    ),
+    // Settings
+    Center(
+      child: Text('Settings'),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      bottomNavigationBar:
+          MediaQuery.of(context).size.width < widget.responsiveWidth
+              ? NavigationBar(
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.list),
+                      label: 'ToDo List',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.check),
+                      label: 'Completed Tasks',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.settings),
+                      label: 'Settings',
+                    ),
+                  ],
+                  selectedIndex: navigationIndex,
+                  onDestinationSelected: (index) {
+                    setState(() {
+                      navigationIndex = index;
+                    });
+                  },
+                )
+              : null,
+      body: Row(
+        children: [
+          MediaQuery.of(context).size.width < widget.responsiveWidth
+              ? Container()
+              : NavigationRail(
+                  destinations: const [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.list),
+                      label: Text('ToDo List'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.check),
+                      label: Text('Completed Tasks'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.settings),
+                      label: Text('Settings'),
+                    ),
+                  ],
+                  selectedIndex: navigationIndex,
+                  onDestinationSelected: (index) {
+                    setState(() {
+                      navigationIndex = index;
+                    });
+                  },
+                ),
+          Expanded(
+            child: _screens[navigationIndex],
+          )
+        ],
       ),
     );
   }
