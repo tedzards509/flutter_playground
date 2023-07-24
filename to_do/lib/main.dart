@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'themes.dart';
+import 'modules/taskview.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,34 +27,32 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       themeAnimationDuration: const Duration(milliseconds: 500),
-      home: const MyHomePage(),
+      home: const MyNavigation(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, this.responsiveWidth = 600});
+class MyNavigation extends StatefulWidget {
+  const MyNavigation({super.key, this.responsiveThreshold = 600});
 
-  final num responsiveWidth;
+  final num responsiveThreshold;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyNavigation> createState() => _MyNavigationState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyNavigationState extends State<MyNavigation> {
   int navigationIndex = 0;
 
-  final List<Widget> _screens = const [
+  final List<Widget> _screens = [
     // ToDo list
     Center(
-      child: Text('ToDo List'),
-    ),
-    // Completed tasks
-    Center(
-      child: Text('Completed Tasks'),
+      child: TaskList(
+        tasks: _testTaskList,
+      ),
     ),
     // Settings
-    Center(
+    const Center(
       child: Text('Settings'),
     ),
   ];
@@ -62,19 +61,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar:
-          MediaQuery.of(context).size.width < widget.responsiveWidth
+          MediaQuery.of(context).size.width < widget.responsiveThreshold
               ? NavigationBar(
                   destinations: const [
                     NavigationDestination(
-                      icon: Icon(Icons.list),
+                      icon: Icon(Icons.check_circle_rounded),
                       label: 'ToDo List',
                     ),
                     NavigationDestination(
-                      icon: Icon(Icons.check),
-                      label: 'Completed Tasks',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.settings),
+                      icon: Icon(Icons.settings_rounded),
                       label: 'Settings',
                     ),
                   ],
@@ -88,20 +83,16 @@ class _MyHomePageState extends State<MyHomePage> {
               : null,
       body: Row(
         children: [
-          MediaQuery.of(context).size.width < widget.responsiveWidth
+          MediaQuery.of(context).size.width < widget.responsiveThreshold
               ? Container()
               : NavigationRail(
                   destinations: const [
                     NavigationRailDestination(
-                      icon: Icon(Icons.list),
+                      icon: Icon(Icons.check_circle_rounded),
                       label: Text('ToDo List'),
                     ),
                     NavigationRailDestination(
-                      icon: Icon(Icons.check),
-                      label: Text('Completed Tasks'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.settings),
+                      icon: Icon(Icons.settings_rounded),
                       label: Text('Settings'),
                     ),
                   ],
@@ -120,3 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+List<Task> _testTaskList = [
+  Task(title: 'Test Task', id: 0),
+  Task(title: "title", id: 1),
+];
