@@ -43,22 +43,23 @@ class MyNavigation extends StatefulWidget {
 
 class _MyNavigationState extends State<MyNavigation> {
   int navigationIndex = 0;
-
-  final List<Widget> _screens = [
-    // ToDo list
-    Center(
-      child: TaskList(
-        tasks: _testTaskList,
-      ),
-    ),
-    // Settings
-    const Center(
-      child: Text('Settings'),
-    ),
-  ];
+  List<Task> taskList = [Task(title: "title", id: 0)];
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> screens = [
+      // ToDo list
+      Center(
+        child: TaskListViewer(
+          tasks: taskList,
+        ),
+      ),
+      // Settings
+      const Center(
+        child: Text('Settings'),
+      ),
+    ];
+
     return Scaffold(
       bottomNavigationBar:
           MediaQuery.of(context).size.width < widget.responsiveThreshold
@@ -104,15 +105,23 @@ class _MyNavigationState extends State<MyNavigation> {
                   },
                 ),
           Expanded(
-            child: _screens[navigationIndex],
+            child: screens[navigationIndex],
           )
         ],
       ),
+      floatingActionButton: () {
+        switch (navigationIndex) {
+          case 0:
+            return FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  taskList.add(Task(title: "title", id: taskList.length));
+                });
+              },
+              child: const Icon(Icons.add_rounded),
+            );
+        }
+      }(),
     );
   }
 }
-
-List<Task> _testTaskList = [
-  Task(title: 'Test Task', id: 0),
-  Task(title: "title", id: 1),
-];

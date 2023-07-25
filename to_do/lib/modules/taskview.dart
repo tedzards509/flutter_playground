@@ -17,15 +17,25 @@ class _TaskCardState extends State<TaskCard> {
       child: Card(
         child: Row(
           children: [
-            Checkbox(
-              value: widget.task.completed,
-              onChanged: (value) {
-                setState(() {
-                  widget.task.completed = value!;
-                });
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Checkbox(
+                  value: widget.task.completed,
+                  onChanged: (value) {
+                    setState(() {
+                      widget.task.completed = value!;
+                    });
+                  }),
             ),
-            Text(widget.task.title),
+            Text(
+              widget.task.title,
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    decoration: widget.task.completed
+                        ? TextDecoration.lineThrough
+                        : null,
+                    color: widget.task.completed ? Colors.grey : null,
+                  ),
+            ),
           ],
         ),
       ),
@@ -33,16 +43,16 @@ class _TaskCardState extends State<TaskCard> {
   }
 }
 
-class TaskList extends StatefulWidget {
-  const TaskList({super.key, required this.tasks});
+class TaskListViewer extends StatefulWidget {
+  const TaskListViewer({super.key, required this.tasks});
 
   final List<Task> tasks;
 
   @override
-  State<TaskList> createState() => _TaskListState();
+  State<TaskListViewer> createState() => _TaskListViewerState();
 }
 
-class _TaskListState extends State<TaskList> {
+class _TaskListViewerState extends State<TaskListViewer> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
